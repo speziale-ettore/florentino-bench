@@ -13,6 +13,9 @@ private:
   const Benchmark &operator=(const Benchmark &that); // Do not implement.
 
 public:
+  virtual void setup() { }
+  virtual void teardown() { }
+
   virtual bool run() = 0;
 };
 
