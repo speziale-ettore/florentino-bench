@@ -19,7 +19,7 @@ private:
   const CPUStream &operator=(const CPUStream &that); // Do not implement.
 
 public:
-  virtual bool run();
+  virtual void run();
 
 private:
   size_t _arrayLength;

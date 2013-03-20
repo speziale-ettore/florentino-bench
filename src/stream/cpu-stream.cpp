@@ -3,6 +3,5 @@
 
 using namespace florentino;
 
-bool CPUStream::run() {
-  return false;
+void CPUStream::run() {
 }

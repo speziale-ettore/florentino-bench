@@ -46,7 +46,7 @@ public:
   const std::string &name() const { return _name; }
 
 protected:
-  virtual bool run() = 0;
+  virtual void run() = 0;
 
   std::ostream &log() const { return *_log; }
 
