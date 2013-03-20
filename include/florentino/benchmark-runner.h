@@ -3,12 +3,17 @@
 #define FLORENTINO_BENCHMARK_RUNNER_H
 
 #include <florentino/benchmark.h>
+#include <florentino/option-parser.h>
 
 #include <vector>
 
 namespace florentino {
 
 class BenchmarkRunner {
+public:
+  static const unsigned DEFAULT_TIMES = 1;
+  static const bool DEFAULT_VERBOSE = false;
+
 public:
   BenchmarkRunner(int argc, char **argv);
   ~BenchmarkRunner();
@@ -25,9 +30,14 @@ public:
 
   int run();
 
+protected:
+  void add(const Option &opt) { _options.add(opt); }
+
 private:
-  int _argc;
-  char **_argv;
+  OptionParser _options;
+
+  unsigned _times;
+  bool _verbose;
 
   std::vector<Benchmark *> _benchmarks;
 };

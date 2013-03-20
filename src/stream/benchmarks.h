@@ -13,12 +13,10 @@ public:
   static const size_t DEFAULT_ARRAY_LENGTH = 8 * 1024 * 1024;
 
 public:
-  StreamBenchmarkRunner(int argc, char *argv[])
-    : BenchmarkRunner(argc, argv),
-      _arrayLength(DEFAULT_ARRAY_LENGTH) { }
+  StreamBenchmarkRunner(int argc, char *argv[]);
 
 public:
-  size_t getArrayLength() const { return _arrayLength; }
+  size_t arrayLength() const { return _arrayLength; }
 
 private:
   size_t _arrayLength;
