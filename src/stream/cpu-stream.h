@@ -10,7 +10,9 @@ namespace florentino {
 
 class CPUStream : public Benchmark {
 public:
-  CPUStream(size_t arrayLength) : _arrayLength(arrayLength) { }
+  CPUStream(size_t arrayLength, std::ostream &log)
+    : Benchmark("CPU-STREAM", log),
+      _arrayLength(arrayLength) { }
 
 private:
   CPUStream(const CPUStream &that); // Do not implement.

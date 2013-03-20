@@ -3,6 +3,7 @@
 #define FLORENTINO_BENCHMARK_RUNNER_H
 
 #include <florentino/benchmark.h>
+#include <florentino/logstream.h>
 #include <florentino/option-parser.h>
 
 #include <vector>
@@ -30,11 +31,15 @@ public:
 
   int run();
 
+public:
+  std::ostream &log() const { return const_cast<logstream &>(_log); }
+
 protected:
   void add(const Option &opt) { _options.add(opt); }
 
 private:
   OptionParser _options;
+  logstream _log;
 
   unsigned _times;
   bool _verbose;

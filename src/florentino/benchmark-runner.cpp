@@ -71,16 +71,30 @@ int BenchmarkRunner::run() {
   try {
     _options.parse();
 
+    _log.verbose(_verbose);
+
     for(iterator i = _benchmarks.begin(), e = _benchmarks.end(); i != e; ++i) {
       Benchmark *bench = *i;
 
       // Execute the benchmark.
       try {
+        _log << "*** Start benchmark " << bench->name() << std::endl;
+
         bench->setup();
         for(unsigned j = 0, f = _times; j != f; ++j) {
-          bench->run();
+          bench->execute();
         }
         bench->teardown();
+
+        _log.verbose(true);
+        _log << bench->name();
+
+        bench->report();
+
+        _log << std::endl;
+        _log.verbose(_verbose);
+
+        _log << "*** End benchmark " << bench->name() << std::endl;
 
       // Intercept any error that occurs in the benchmark and give him a last
       // chance to teardown benchmarking environment.

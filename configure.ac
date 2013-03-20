@@ -15,6 +15,7 @@ AC_PROG_LIBTOOL()
 AC_LANG([C++])
 
 AC_CHECK_OPENCL()
+AC_CHECK_CLOCKS()
 
 AC_CONFIG_FILES([Makefile \
                  include/Makefile \

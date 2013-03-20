@@ -7,4 +7,5 @@ lib_LTLIBRARIES = libflorentino.la
 
 libflorentino_la_CPPFLAGS = -I$(top_srcdir)/include
 libflorentino_la_SOURCES = benchmark-runner.cpp \
+                           benchmark.cpp \
                            option-parser.cpp
