@@ -2,24 +2,19 @@
 #ifndef CPU_STREAM_H
 #define CPU_STREAM_H
 
-#include "florentino/benchmark.h"
+#include "benchmarks.h"
 
 #include <cstdlib>
 
 namespace florentino {
 
-class CPUStream : public Benchmark {
+class CPUStream : public StreamBench {
 public:
   CPUStream(size_t arrayLength, std::ostream &log)
-    : Benchmark("CPU-STREAM", log),
-      _arrayLength(arrayLength),
+    : StreamBench(arrayLength, "CPU-STREAM", log),
       _a(_arrayLength),
       _b(_arrayLength),
       _c(_arrayLength) { }
-
-private:
-  CPUStream(const CPUStream &that); // Do not implement.
-  const CPUStream &operator=(const CPUStream &that); // Do not implement.
 
 public:
   virtual void setup();
@@ -33,11 +28,9 @@ private:
   void add();
   void triad(double k);
 
-  void check(double k);
+  void check(double k) const;
 
 private:
-  size_t _arrayLength;
-
   std::vector<double> _a;
   std::vector<double> _b;
   std::vector<double> _c;

@@ -4,8 +4,6 @@
 
 #include "florentino/benchmark-runner.h"
 
-#include "cpu-stream.h"
-
 namespace florentino {
 
 class StreamBenchmarkRunner : public BenchmarkRunner {
@@ -20,6 +18,22 @@ public:
 
 private:
   size_t _arrayLength;
+};
+
+class StreamBench : public Benchmark {
+protected:
+  StreamBench(size_t arrayLength, const std::string &nm, std::ostream &log)
+    : Benchmark(nm, log),
+    _arrayLength(_arrayLength) { }
+
+protected:
+  void check(const std::vector<double> &a,
+             const std::vector<double> &b,
+             const std::vector<double> &c,
+             double k) const;
+
+protected:
+  const size_t _arrayLength;
 };
 
 } // End namespace florentino.

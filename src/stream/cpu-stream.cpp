@@ -2,9 +2,6 @@
 #include "cpu-stream.h"
 
 #include <iomanip>
-#include <stdexcept>
-
-#include <cmath>
 
 using namespace florentino;
 
@@ -120,59 +117,6 @@ void CPUStream::triad(double k) {
     _a[i] = _b[i] + k * _c[i];
 }
 
-void CPUStream::check(double k) {
-  double ai, bi, ci;
-
-  // Reproduce initialization.
-  ai = 1.0;
-  bi = 2.0;
-  ci = 0.0;
-  ai *= 2.0;
-
-  // Simulate timed loop.
-  for(unsigned i = 0, e = runs(); i != e; ++i) {
-    ci = ai;
-    bi = k * ci;
-    ci = ai + bi;
-    ai = bi + k * ci;
-  }
-  ai *= _arrayLength;
-  bi *= _arrayLength;
-  ci *= _arrayLength;
-
-  double aSum = 0.0,
-         bSum = 0.0,
-         cSum = 0.0;
-
-  for(unsigned i = 0, e = _arrayLength; i != e; ++i) {
-    aSum += _a[i];
-    bSum += _b[i];
-    cSum += _c[i];
-  }
-
-  log() << "Result comparison:"
-        << std::endl
-
-        << "       expected  : "
-        << std::scientific << ai << " "
-        << std::scientific << bi << " "
-        << std::scientific << ci << " "
-        << std::endl
-
-        << "       observed  : "
-        << std::scientific << aSum << " "
-        << std::scientific << bSum << " "
-        << std::scientific << cSum << " "
-        << std::endl;
-
-  if(std::abs(ai - aSum) / aSum > 1e-8)
-    throw std::runtime_error("Failed validation on array a[]");
-
-  if(std::abs(bi - bSum) / bSum > 1e-8)
-    throw std::runtime_error("Failed validation on array b[]");
-
-  if(std::abs(ci - cSum) / cSum > 1e-8)
-    throw std::runtime_error("Failed validation on array c[]");
-
-  log() << "Solution validates" << std::endl;
+void CPUStream::check(double k) const {
+  StreamBench::check(_a, _b, _c, 3.0);
 }
