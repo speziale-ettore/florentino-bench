@@ -23,7 +23,7 @@ void Benchmark::report() {
 
   // Here we known the meaning of only the first two clocks, hence we can
   // perform only one subtraction. Subclasses can compute other stats.
-  const TimeStat &stat = _clocks[1] - _clocks[0];
+  const TimeStat &stat = _clocks[ClkEnd] - _clocks[ClkStart];
 
   for(tks_iterator i = stat.begin(), e = stat.end(); i != e; ++i)
     log() << " " << std::scientific << *i;

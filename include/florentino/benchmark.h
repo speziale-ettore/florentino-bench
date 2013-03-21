@@ -36,6 +36,9 @@ private:
   const Benchmark &operator=(const Benchmark &that); // Do not implement.
 
 public:
+  virtual ~Benchmark() { }
+
+public:
   void execute();
 
   virtual void setup();
@@ -48,12 +51,19 @@ public:
 protected:
   virtual void run() = 0;
 
-  std::ostream &log() const { return *_log; }
+  std::ostream &log() const {
+    return *_log;
+  }
+
+  size_t runs() const {
+    return std::min(_clocks[ClkStart].size(), _clocks[ClkEnd].size());
+  }
+
+protected:
+  Clocks _clocks;
 
 private:
   std::string _name;
-  Clocks _clocks;
-
   std::ostream *_log;
 };
 

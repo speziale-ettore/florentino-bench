@@ -46,6 +46,11 @@ public:
                                       _desc(desc) { }
 
 public:
+  const Tick &operator[](int i) const {
+    return _values[i];
+  }
+
+public:
   bool valid() const {
     return _valid;
   }
@@ -54,8 +59,13 @@ public:
     return _desc;
   }
 
+  size_t size() const {
+    return _values.size();
+  }
+
   double avg() const {
-    return std::accumulate(begin(), end(), 0.0);
+    return std::accumulate(_values.begin(), _values.end(), 0.0) /
+           _values.size();
   }
 
 protected:

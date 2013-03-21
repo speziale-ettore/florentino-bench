@@ -10,7 +10,7 @@ namespace florentino {
 
 class StreamBenchmarkRunner : public BenchmarkRunner {
 public:
-  static const size_t DEFAULT_ARRAY_LENGTH = 8 * 1024 * 1024;
+  static const size_t DEFAULT_ARRAY_LENGTH = 24 / sizeof(double) * size_t(1e6);
 
 public:
   StreamBenchmarkRunner(int argc, char *argv[]);

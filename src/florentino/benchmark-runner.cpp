@@ -71,43 +71,40 @@ int BenchmarkRunner::run() {
   try {
     _options.parse();
 
-    _log.verbose(_verbose);
-
-    for(iterator i = _benchmarks.begin(), e = _benchmarks.end(); i != e; ++i) {
-      Benchmark *bench = *i;
-
-      // Execute the benchmark.
-      try {
-        _log << "*** Start benchmark " << bench->name() << std::endl;
-
-        bench->setup();
-        for(unsigned j = 0, f = _times; j != f; ++j) {
-          bench->execute();
-        }
-        bench->teardown();
-
-        _log.verbose(true);
-        _log << bench->name();
-
-        bench->report();
-
-        _log << std::endl;
-        _log.verbose(_verbose);
-
-        _log << "*** End benchmark " << bench->name() << std::endl;
-
-      // Intercept any error that occurs in the benchmark and give him a last
-      // chance to teardown benchmarking environment.
-      } catch(const std::exception &ex) {
-        bench->teardown();
-        throw ex;
-      }
-    }
-
-    return EXIT_SUCCESS;
-
   } catch(const std::exception &ex) {
     std::cerr << ex.what() << std::endl;
     return EXIT_FAILURE;
   }
+
+  _log.verbose(_verbose);
+
+  for(iterator i = _benchmarks.begin(), e = _benchmarks.end(); i != e; ++i) {
+    Benchmark *bench = *i;
+
+    try {
+      _log << "*** Start benchmark " << bench->name() << std::endl;
+
+      bench->setup();
+      for(unsigned j = 0, f = _times; j != f; ++j)
+        bench->execute();
+      bench->teardown();
+
+      _log.verbose(true);
+      _log << bench->name();
+
+      bench->report();
+
+      _log << std::endl;
+      _log.verbose(_verbose);
+
+      _log << "*** End benchmark " << bench->name() << std::endl;
+
+    } catch(const std::exception &ex) {
+      _log << ex.what() << std::endl
+           << "*** End benchmark " << bench->name() << std::endl;
+      return EXIT_FAILURE;
+    }
+  }
+
+  return EXIT_SUCCESS;
 }
