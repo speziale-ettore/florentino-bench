@@ -24,13 +24,24 @@ class StreamBench : public Benchmark {
 protected:
   StreamBench(size_t arrayLength, const std::string &nm, std::ostream &log)
     : Benchmark(nm, log),
-    _arrayLength(_arrayLength) { }
+    _arrayLength(arrayLength) { }
+
+public:
+  virtual void setup();
+  virtual void run();
+  virtual void teardown();
 
 protected:
-  void check(const std::vector<double> &a,
-             const std::vector<double> &b,
-             const std::vector<double> &c,
-             double k) const;
+  virtual void init() = 0;
+  virtual void copy() = 0;
+  virtual void scale(double k) = 0;
+  virtual void add() = 0;
+  virtual void triad(double k) = 0;
+
+  virtual void check(double k) const = 0;
+
+protected:
+  void check(const double *a, const double *b, const double *c, double k) const;
 
 protected:
   const size_t _arrayLength;

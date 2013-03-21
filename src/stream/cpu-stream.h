@@ -16,19 +16,14 @@ public:
       _b(_arrayLength),
       _c(_arrayLength) { }
 
-public:
-  virtual void setup();
-  virtual void run();
-  virtual void teardown();
+protected:
+  virtual void init();
+  virtual void copy();
+  virtual void scale(double k);
+  virtual void add();
+  virtual void triad(double k);
 
-private:
-  void init();
-  void copy();
-  void scale(double k);
-  void add();
-  void triad(double k);
-
-  void check(double k) const;
+  virtual void check(double k) const;
 
 private:
   std::vector<double> _a;
