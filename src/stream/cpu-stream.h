@@ -10,11 +10,8 @@ namespace florentino {
 
 class CPUStream : public StreamBench {
 public:
-  CPUStream(size_t arrayLength, std::ostream &log)
-    : StreamBench(arrayLength, "CPU-STREAM", log),
-      _a(_arrayLength),
-      _b(_arrayLength),
-      _c(_arrayLength) { }
+  CPUStream(StreamBenchmarkRunner &runner)
+    : StreamBench("CPU-STREAM", runner) { }
 
 protected:
   virtual void init();
@@ -23,7 +20,7 @@ protected:
   virtual void add();
   virtual void triad(double k);
 
-  virtual void check(double k) const;
+  virtual void check(double k);
 
 private:
   std::vector<double> _a;

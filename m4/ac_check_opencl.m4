@@ -9,6 +9,7 @@ AC_CHECK_LIB([OpenCL], [clGetPlatformIDs], [ac_check_have_libopencl=yes])
 
 AS_IF([test "x$ac_check_have_cl_hpp" = "xyes" -a \
             "x$ac_check_have_libopencl" = "xyes"],
-      [AC_DEFINE([HAVE_OPENCL], [1])])
+      [AC_DEFINE([HAVE_OPENCL], [1])
+       LIBS="-lOpenCL $LIBS"])
 
 ])

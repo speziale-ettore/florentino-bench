@@ -6,6 +6,13 @@
 
 #include <iostream>
 
+#ifdef HAVE_OPENCL
+
+#define __CL_ENABLE_EXCEPTIONS
+#include <CL/cl.hpp>
+
+#endif //HAVE_OPENCL
+
 namespace florentino {
 
 class BenchmarkRunner;
@@ -24,9 +31,12 @@ public:
   iterator end() const { return _clocks.end(); }
 
 protected:
-  Benchmark(const std::string &nm = "UNKNOWN", std::ostream &log = std::clog)
+  Benchmark() : _name("UNKNOWN"),
+                _runner(0) { }
+
+  Benchmark(const std::string &nm, BenchmarkRunner &runner)
     : _name(nm),
-      _log(&log) {
+      _runner(&runner) {
     _clocks.reserve(ClkStart, "start");
     _clocks.reserve(ClkEnd, "end");
   }
@@ -46,13 +56,8 @@ public:
   virtual void report();
 
 public:
-  const std::string &name() const { return _name; }
-
-protected:
-  virtual void run() = 0;
-
-  std::ostream &log() const {
-    return *_log;
+  const std::string &name() const {
+    return _name;
   }
 
   size_t runs() const {
@@ -60,12 +65,59 @@ protected:
   }
 
 protected:
+  virtual void run() = 0;
+
+  std::ostream &log() const;
+
+  BenchmarkRunner &runner() const {
+    return *_runner;
+  }
+
+  template <typename Ty>
+  Ty &runner() const {
+    return *reinterpret_cast<Ty *>(_runner);
+  }
+
+protected:
   Clocks _clocks;
 
 private:
   std::string _name;
-  std::ostream *_log;
+  BenchmarkRunner *_runner;
 };
+
+#ifdef HAVE_OPENCL
+
+class OpenCLAdapter {
+protected:
+  void allocDevices(cl_device_type devType, unsigned devsCount);
+  void clearDevices();
+
+  cl::Buffer allocBuffer(size_t size);
+  cl::CommandQueue allocQueue(unsigned dev);
+
+  void compile(const std::string &dataDir, const std::string &file);
+  cl::Kernel load(const std::string &name);
+
+  size_t preferredWGSizeMultiple(cl::Kernel &kernel, unsigned dev);
+
+private:
+  cl::Platform _plat;
+  cl::Context _ctx;
+  std::vector<cl::Device> _devs;
+
+  cl::Program _prog;
+};
+
+#endif // HAVE_OPENCL
+
+inline std::ostream &hline(std::ostream &os) {
+  for(unsigned i = 0, e = 62; i != e; ++i)
+    os << "-";
+  os << std::endl;
+
+  return os;
+}
 
 } // End namespace florentino.
 

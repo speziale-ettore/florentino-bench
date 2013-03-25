@@ -34,12 +34,35 @@ void arrayLengthHandler(void *arg, const char *optArg) {
   *arrayLength = value;
 }
 
-std::ostream &hline(std::ostream &os) {
-  for(unsigned i = 0, e = 62; i != e; ++i)
-    os << "-";
-  os << std::endl;
+void devsCountHandler(void *arg, const char *optArg) {
+  unsigned int *devsCount = reinterpret_cast<unsigned int *>(arg);
 
-  return os;
+  // Parse to signed type to prevent negative sizes.
+  int value;
+
+  std::istringstream is(optArg);
+  is >> value;
+
+  if(is.fail() || !is.eof()) {
+    std::ostringstream os;
+    os << "Error: option '-c' expects a positive number, "
+          "got '" << optArg << "'";
+
+    throw std::runtime_error(os.str());
+  }
+
+  if(value < 1)
+    throw std::runtime_error("Error: option '-c' expects a positive number");
+
+  *devsCount = value;
+}
+
+void dataDirHandler(void *arg, const char *optArg) {
+  std::string *dataDir = reinterpret_cast<std::string *>(arg);
+
+  // Nothing to parse here. Defer path validation at the point where it is
+  // actually used.
+  *dataDir = optArg;
 }
 
 } // End anonymous namespace.
@@ -48,12 +71,27 @@ std::ostream &hline(std::ostream &os) {
 // StreamBenchmarkRunner implementation.
 //
 
+const size_t StreamBenchmarkRunner::DEFAULT_ARRAY_LENGTH
+  = 24 / sizeof(double) * size_t(1e6);
+const size_t StreamBenchmarkRunner::DEFAULT_DEVS_COUNT
+  = 1;
+const std::string StreamBenchmarkRunner::DEFAULT_DATA_DIR
+  = PACKAGE_DATADIR;
+
 StreamBenchmarkRunner::StreamBenchmarkRunner(int argc, char *argv[])
   : BenchmarkRunner(argc, argv),
-    _arrayLength(DEFAULT_ARRAY_LENGTH) {
+    _arrayLength(DEFAULT_ARRAY_LENGTH),
+    _devsCount(DEFAULT_DEVS_COUNT),
+    _dataDir(DEFAULT_DATA_DIR) {
   add(Option('l', Option::REQUIRED_ARGUMENT,
              arrayLengthHandler, &_arrayLength,
              "-l L", "set array length to L"));
+  add(Option('c', Option::REQUIRED_ARGUMENT,
+             devsCountHandler, &_devsCount,
+             "-c C", "use up to C OpenCL devices"));
+  add(Option('d', Option::REQUIRED_ARGUMENT,
+             dataDirHandler, &_dataDir,
+             "-d D", "set data directory to D"));
 }
 
 //
@@ -75,11 +113,11 @@ void StreamBench::setup() {
 
         << hline
 
-        << "Array size = " << _arrayLength
+        << "Array size = " << arrayLength()
         << std::endl
         << "Total memory required = "
         << std::scientific << std::setprecision(1)
-        << (3 * sizeof(double) * _arrayLength * 1e-6)
+        << (3 * sizeof(double) * arrayLength() * 1e-6)
         << " MB."
         << std::endl
 
@@ -106,12 +144,18 @@ void StreamBench::run() {
 }
 
 void StreamBench::teardown() {
+  size_t memOpsPerIter = 2 + // copy: reads c[i] -- writes a[i]
+                         2 + // scale: reads c[i] -- writes b[i]
+                         3 + // add: reads a[i], b[i] -- writes c[i]
+                         3;  // triad: reads b[i], c[i] -- writes a[i]
+
   double totalTime = _clocks[ClkEnd][runs() - 1] -
                      _clocks[ClkStart][runs() - 1];
+  size_t totalSize = memOpsPerIter * arrayLength() * runs();
 
   log() << "Average rate (MB/s): "
         << std::scientific << std::setprecision(4) << std::setw(11)
-        << (3 * sizeof(double) * _arrayLength * runs() * 1e-6 / totalTime)
+        << (totalSize * 1e-6 / totalTime)
         << std::endl
 
         << "TOTAL time (without initialization) = "
@@ -130,7 +174,7 @@ void StreamBench::teardown() {
 void StreamBench::check(const double *a,
                         const double *b,
                         const double *c,
-                        double k) const {
+                        double k) {
   double ai, bi, ci;
 
   // Reproduce initialization.
@@ -146,15 +190,15 @@ void StreamBench::check(const double *a,
     ci = ai + bi;
     ai = bi + k * ci;
   }
-  ai *= _arrayLength;
-  bi *= _arrayLength;
-  ci *= _arrayLength;
+  ai *= arrayLength();
+  bi *= arrayLength();
+  ci *= arrayLength();
 
   double aSum = 0.0,
          bSum = 0.0,
          cSum = 0.0;
 
-  for(unsigned i = 0, e = _arrayLength; i != e; ++i) {
+  for(unsigned i = 0, e = arrayLength(); i != e; ++i) {
     aSum += a[i];
     bSum += b[i];
     cSum += c[i];
