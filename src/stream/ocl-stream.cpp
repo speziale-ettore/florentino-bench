@@ -166,7 +166,7 @@ void OpenCLStream::check(double k) {
     #define BUFFER(N)                            \
     queue.enqueueReadBuffer(_envs[i].N(),        \
                             false,               \
-                            i * chunkSize,       \
+                            0,                   \
                             myChunkSize,         \
                             &N[i * chunkLength]);
 
