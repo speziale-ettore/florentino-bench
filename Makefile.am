@@ -14,5 +14,7 @@ MAINTAINERCLEANFILES = aclocal.m4 \
 
 ACLOCAL_AMFLAGS = -I m4
 
+EXTRA_DIST = README.md
+
 maintainer-clean-local:
 	rm -rf build-aux
