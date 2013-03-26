@@ -150,8 +150,8 @@ void StreamBench::teardown() {
                          3;  // triad: reads b[i], c[i] -- writes a[i]
 
   double totalTime = _clocks[ClkEnd][runs() - 1] -
-                     _clocks[ClkStart][runs() - 1];
-  size_t totalSize = memOpsPerIter * arrayLength() * runs();
+                     _clocks[ClkStart][0];
+  size_t totalSize = memOpsPerIter * sizeof(double) * arrayLength() * runs();
 
   log() << "Average rate (MB/s): "
         << std::scientific << std::setprecision(4) << std::setw(11)
