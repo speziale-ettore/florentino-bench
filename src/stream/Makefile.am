@@ -16,3 +16,5 @@ florentino_stream_SOURCES = florentino-stream.cpp \
                             ocl-stream.h ocl-stream.cpp
 florentino_stream_LDADD = $(top_builddir)/src/florentino/libflorentino.la
 florentino_stream_DATA = florentino-stream-kernels.cl
+
+EXTRA_DIST = florentino-stream-kernels.cl
