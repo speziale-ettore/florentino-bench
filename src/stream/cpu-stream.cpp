@@ -1,13 +1,27 @@
 
 #include "cpu-stream.h"
 
+#include "florentino/memory.h"
+
 using namespace florentino;
 
-void CPUStream::init() {
-  _a.resize(arrayLength());
-  _b.resize(arrayLength());
-  _c.resize(arrayLength());
+void CPUStream::setup() {
+  _a = xcalloc<double>(arrayLength());
+  _b = xcalloc<double>(arrayLength());
+  _c = xcalloc<double>(arrayLength());
 
+  StreamBench::setup();
+}
+
+void CPUStream::teardown() {
+  StreamBench::teardown();
+
+  xfree(_a);
+  xfree(_b);
+  xfree(_c);
+}
+
+void CPUStream::init() {
   for(unsigned i = 0, e = arrayLength(); i != e; ++i) {
     _a[i] = 1.0;
     _b[i] = 2.0;

@@ -11,7 +11,14 @@ namespace florentino {
 class CPUStream : public StreamBench {
 public:
   CPUStream(StreamBenchmarkRunner &runner)
-    : StreamBench("CPU-STREAM", runner) { }
+    : StreamBench("CPU-STREAM", runner),
+      _a(0),
+      _b(0),
+      _c(0) { }
+
+public:
+  virtual void setup();
+  virtual void teardown();
 
 protected:
   virtual void init();
@@ -23,9 +30,9 @@ protected:
   virtual void check(double k);
 
 private:
-  std::vector<double> _a;
-  std::vector<double> _b;
-  std::vector<double> _c;
+  double *_a;
+  double *_b;
+  double *_c;
 };
 
 } // End namespace florentino.
