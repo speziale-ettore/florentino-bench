@@ -88,7 +88,7 @@ StreamBenchmarkRunner::StreamBenchmarkRunner(int argc, char *argv[])
              "-l L", "set array length to L"));
   add(Option('c', Option::REQUIRED_ARGUMENT,
              devsCountHandler, &_devsCount,
-             "-c C", "use up to C OpenCL devices"));
+             "-c C", "use C OpenCL devices"));
   add(Option('d', Option::REQUIRED_ARGUMENT,
              dataDirHandler, &_dataDir,
              "-d D", "set data directory to D"));
