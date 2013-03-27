@@ -117,7 +117,7 @@ void OpenCLAdapter::clearDevices() {
 cl::Buffer OpenCLAdapter::allocBuffer(size_t size) {
   assert(_plat() && _ctx() && "unknown platform/context");
 
-  return cl::Buffer::Buffer(_ctx, CL_MEM_READ_WRITE, size);
+  return cl::Buffer(_ctx, CL_MEM_READ_WRITE, size);
 }
 
 cl::CommandQueue OpenCLAdapter::allocQueue(unsigned dev) {

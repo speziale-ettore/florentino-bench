@@ -6,6 +6,7 @@
 #include <string>
 
 #include <cassert>
+#include <cstddef>
 
 namespace florentino {
 

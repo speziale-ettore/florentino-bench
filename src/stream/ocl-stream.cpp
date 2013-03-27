@@ -200,8 +200,18 @@ void OpenCLGPUStream::init() {
     if(i == e - 1)
       myChunkLength += arrayLength() % devsCount();
 
-    cl::KernelFunctor &init = _envs[i].init();
-    init(_envs[i].a(), _envs[i].b(), _envs[i].c(), cl_uint(myChunkLength));
+    cl::CommandQueue &queue = _envs[i].queue();
+    cl::Kernel &init = _envs[i].init();
+
+    init.setArg(0, _envs[i].a());
+    init.setArg(1, _envs[i].b());
+    init.setArg(2, _envs[i].c());
+    init.setArg(3, cl_uint(myChunkLength));
+
+    queue.enqueueNDRangeKernel(init,
+                               cl::NullRange,
+                               _envs[i].initGlobalWI(),
+                               _envs[i].initLocalWI());
   }
 
   // Before proceeding into the times section, make sure intialization is done!
@@ -220,8 +230,17 @@ void OpenCLGPUStream::copy() {
     if(i == e - 1)
       myChunkLength += arrayLength() % devsCount();
 
-    cl::KernelFunctor &copy = _envs[i].copy();
-    copy(_envs[i].a(), _envs[i].c(), cl_uint(myChunkLength));
+    cl::CommandQueue &queue = _envs[i].queue();
+    cl::Kernel &copy = _envs[i].copy();
+
+    copy.setArg(0, _envs[i].a());
+    copy.setArg(1, _envs[i].c());
+    copy.setArg(2, cl_uint(myChunkLength));
+
+    queue.enqueueNDRangeKernel(copy,
+                               cl::NullRange,
+                               _envs[i].copyGlobalWI(),
+                               _envs[i].copyLocalWI());
   }
 }
 
@@ -234,8 +253,18 @@ void OpenCLGPUStream::scale(double k) {
     if(i == e - 1)
       myChunkLength += arrayLength() % devsCount();
 
-    cl::KernelFunctor &scale = _envs[i].scale();
-    scale(_envs[i].b(), _envs[i].c(), cl_double(k), cl_uint(myChunkLength));
+    cl::CommandQueue &queue = _envs[i].queue();
+    cl::Kernel &scale = _envs[i].scale();
+
+    scale.setArg(0, _envs[i].b());
+    scale.setArg(1, _envs[i].c());
+    scale.setArg(2, cl_double(k));
+    scale.setArg(3, cl_uint(myChunkLength));
+
+    queue.enqueueNDRangeKernel(scale,
+                               cl::NullRange,
+                               _envs[i].scaleGlobalWI(),
+                               _envs[i].scaleLocalWI());
   }
 }
 
@@ -248,8 +277,18 @@ void OpenCLGPUStream::add() {
     if(i == e - 1)
       myChunkLength += arrayLength() % devsCount();
 
-    cl::KernelFunctor &add = _envs[i].add();
-    add(_envs[i].a(), _envs[i].b(), _envs[i].c(), cl_uint(myChunkLength));
+    cl::CommandQueue &queue = _envs[i].queue();
+    cl::Kernel &add = _envs[i].add();
+
+    add.setArg(0, _envs[i].a());
+    add.setArg(1, _envs[i].b());
+    add.setArg(2, _envs[i].c());
+    add.setArg(3, cl_uint(myChunkLength));
+
+    queue.enqueueNDRangeKernel(add,
+                               cl::NullRange,
+                               _envs[i].addGlobalWI(),
+                               _envs[i].addLocalWI());
   }
 }
 
@@ -262,12 +301,19 @@ void OpenCLGPUStream::triad(double k) {
     if(i == e - 1)
       myChunkLength += arrayLength() % devsCount();
 
-    cl::KernelFunctor &triad = _envs[i].triad();
-    triad(_envs[i].a(),
-          _envs[i].b(),
-          _envs[i].c(),
-          cl_double(k),
-          cl_uint(myChunkLength));
+    cl::CommandQueue &queue = _envs[i].queue();
+    cl::Kernel &triad = _envs[i].triad();
+
+    triad.setArg(0, _envs[i].a());
+    triad.setArg(1, _envs[i].b());
+    triad.setArg(2, _envs[i].c());
+    triad.setArg(3, cl_double(k));
+    triad.setArg(4, cl_uint(myChunkLength));
+
+    queue.enqueueNDRangeKernel(triad,
+                               cl::NullRange,
+                               _envs[i].triadGlobalWI(),
+                               _envs[i].triadLocalWI());
   }
 
   // Triad is the last kernel: flush all queues just to be sure commands are

@@ -26,7 +26,9 @@ public:
 
     #define KERNEL(N)                                           \
     void N(cl::Kernel &kern, size_t globalWI, size_t localWI) { \
-      _ ## N = kern.bind(_queue, globalWI, localWI);            \
+      _ ## N = kern;                                            \
+      _ ## N ## GlobalWI = cl::NDRange(globalWI);               \
+      _ ## N ## LocalWI = cl::NDRange(localWI);                 \
     }
 
     KERNEL(init)
@@ -55,8 +57,10 @@ public:
 
     cl::CommandQueue &queue() { return _queue; }
 
-    #define KERNEL(N)                         \
-    cl::KernelFunctor &N() { return _ ## N; }
+    #define KERNEL(N)                                           \
+    cl::Kernel &N() { return _ ## N; }                          \
+    cl::NDRange &N ## GlobalWI() { return _ ## N ## GlobalWI; } \
+    cl::NDRange &N ## LocalWI() { return _ ## N ## LocalWI; }
 
     KERNEL(init)
     KERNEL(copy)
@@ -78,8 +82,10 @@ public:
 
     cl::CommandQueue _queue;
 
-    #define KERNEL(N)        \
-    cl::KernelFunctor _ ## N;
+    #define KERNEL(N)               \
+    cl::Kernel _ ## N;              \
+    cl::NDRange _ ## N ## GlobalWI; \
+    cl::NDRange _ ## N ## LocalWI;
 
     KERNEL(init)
     KERNEL(copy)
