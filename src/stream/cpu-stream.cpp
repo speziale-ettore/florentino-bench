@@ -14,7 +14,7 @@ void CPUStream::teardown() {
 }
 
 void CPUStream::check(double k) {
-  StreamBench::check(&_a[0], &_b[0], &_c[0], k);
+  StreamBench::check(_a, _b, _c, k);
 }
 
 // With sse2 we can vectorize operations using vectors of 2 doubles.
