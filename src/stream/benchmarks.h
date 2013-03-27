@@ -65,6 +65,14 @@ protected:
   void check(const double *a, const double *b, const double *c, double k);
 };
 
+inline std::ostream &hline(std::ostream &os) {
+  for(unsigned i = 0, e = 62; i != e; ++i)
+    os << "-";
+  os << std::endl;
+
+  return os;
+}
+
 } // End namespace florentino.
 
 #endif // BENCHMARK_H

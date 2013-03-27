@@ -114,14 +114,6 @@ private:
 
 #endif // HAVE_OPENCL
 
-inline std::ostream &hline(std::ostream &os) {
-  for(unsigned i = 0, e = 62; i != e; ++i)
-    os << "-";
-  os << std::endl;
-
-  return os;
-}
-
 } // End namespace florentino.
 
 #endif // FLORENTINO_BENCHMARK_H
