@@ -75,8 +75,9 @@ void OpenCLAdapter::allocDevices(cl_device_type devType, unsigned devsCount) {
   // No devices available: error.
   if(_devs.empty()) {
     std::ostringstream os;
-    os << "Cannot find " << devsCount << " "
-                         << devType << (devsCount == 1 ? "" : "s");
+    os << "Cannot find "
+       << devsCount << " "
+       << devTypeToString(devType) << (devsCount == 1 ? "" : "s");
 
     throw std::runtime_error(os.str());
   }
@@ -177,6 +178,24 @@ size_t OpenCLAdapter::preferredWGSizeMultiple(cl::Kernel &kernel,
 
   return kernel.getWorkGroupInfo<CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE>(
            _devs[dev]);
+}
+
+std::string OpenCLAdapter::devTypeToString(cl_device_type devType) {
+  switch(devType) {
+  case CL_DEVICE_TYPE_CPU:
+    return "CPU";
+
+  case CL_DEVICE_TYPE_GPU:
+    return "GPU";
+
+  case CL_DEVICE_TYPE_ACCELERATOR:
+    return "ACCELERATOR";
+  }
+
+  std::ostringstream os;
+  os << "UNKNOWN-" << devType;
+
+  return os.str();
 }
 
 #endif // HAVE_OPENCL

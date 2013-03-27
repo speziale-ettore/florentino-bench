@@ -102,6 +102,9 @@ protected:
   size_t preferredWGSizeMultiple(cl::Kernel &kernel, unsigned dev);
 
 private:
+  std::string devTypeToString(cl_device_type devType);
+
+private:
   cl::Platform _plat;
   cl::Context _ctx;
   std::vector<cl::Device> _devs;
