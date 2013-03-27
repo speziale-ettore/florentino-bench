@@ -78,7 +78,7 @@ void OpenCLStream::setup() {
     globalWI = myChunkLength;                                                 \
     localWI = 4 * preferredWGSizeMultiple(N, i);                              \
                                                                               \
-    /* Number of local work items must alwasy be lesser or equal to number */ \
+    /* Number of local work items must always be lesser or equal to number */ \
     /* of global work items. */                                               \
     if(globalWI < localWI)                                                    \
       globalWI = localWI;                                                     \

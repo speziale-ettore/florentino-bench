@@ -10,6 +10,14 @@
 
 namespace florentino {
 
+// Describe a command line option as a "tuple" of:
+//
+// - _opt: command line flag
+// - _value: whether or not the option requires/accepts a value
+// - _handler: a function called to process the option once recognized
+// - _arg: a user argument, passed to _handler during option processing
+// - _help: option short help -- e.g. "-a A"
+// - _desc: option description -- e.g. "set antani count to A"
 class Option {
 public:
   enum Value {
@@ -52,6 +60,8 @@ private:
   const char *_desc;
 };
 
+// This class manages a collection of options and process the command line. When
+// a known option is recognized, the corresponding handler is executed.
 class OptionParser {
 public:
   static const bool DEFAULT_HELP = false;

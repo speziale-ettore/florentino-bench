@@ -11,12 +11,14 @@
 #define __CL_ENABLE_EXCEPTIONS
 #include <CL/cl.hpp>
 
-#endif //HAVE_OPENCL
+#endif // HAVE_OPENCL
 
 namespace florentino {
 
 class BenchmarkRunner;
 
+// Benchmark root class. Contains the functionalities for timed execution of a
+// benchmark. Default implementation only gather wall clock time.
 class Benchmark {
 public:
   enum {
@@ -88,6 +90,8 @@ private:
 
 #ifdef HAVE_OPENCL
 
+// Defines some utility methods to ease the process of searching OpenCL devices
+// and setup corresponding contexts.
 class OpenCLAdapter {
 protected:
   void allocDevices(cl_device_type devType, unsigned devsCount);

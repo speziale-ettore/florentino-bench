@@ -8,6 +8,7 @@
 
 namespace florentino {
 
+// Execute STREAM on the CPU, employing just 1 thread.
 class CPUStream : public StreamBench {
 public:
   CPUStream(StreamBenchmarkRunner &runner)

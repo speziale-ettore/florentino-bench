@@ -12,8 +12,10 @@
 
 namespace florentino {
 
+// A statistic about time.
 class TimeStat {
 public:
+  // Record the time an event occurs, in nanoseconds.
   class Tick {
   public:
     Tick(unsigned long long val = 0) : _val(val) { }
@@ -89,6 +91,8 @@ protected:
   }
 };
 
+// A Clock is simple a TimeStat that exposes a member function to read the
+// current time.
 class Clock : public TimeStat {
 public:
   Clock() { }
@@ -106,6 +110,8 @@ public:
   }
 };
 
+// A collection of clocks. Collection can be iterated and provides accessors
+// member functions to record current time on a specific clock.
 class Clocks {
 public:
   typedef std::vector<Clock>::const_iterator iterator;

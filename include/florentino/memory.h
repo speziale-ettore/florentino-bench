@@ -4,6 +4,8 @@
 
 #include <cstdlib>
 
+// Memory related routines. Notably, guarded memory allocation, aligned memory
+// allocation, and template version to automatically cast to the right type.
 namespace florentino {
 
 inline void *xalloc(size_t size) {

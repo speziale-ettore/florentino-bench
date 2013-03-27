@@ -119,7 +119,7 @@ void CPUStream::triad(double k) {
 }
 
 // Normal scalar implementation. Performance will not be good, and it is
-// unlikedly the compiler can vectorize the code.
+// unlikely the compiler can vectorize the code.
 #else
 
 void CPUStream::setup() {

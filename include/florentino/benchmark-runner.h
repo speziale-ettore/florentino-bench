@@ -10,6 +10,21 @@
 
 namespace florentino {
 
+// Manages everything about the run of a set of benchmark. If you want to add
+// new options, just subclass it and use:
+//
+// void BenchmarkRunner::add(const Option &).
+//
+// To add new benchmarks to this runner, call:
+//
+// void BenchmarkRunner::add(Benchmark *)
+//
+// At last, to run benchmarks call:
+// new options, just subclass it.
+//
+// void BenchmarkRunner::run()
+//
+// All benchmarks gets run and stats are gathered.
 class BenchmarkRunner {
 public:
   static const unsigned DEFAULT_TIMES = 1;

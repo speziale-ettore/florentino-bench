@@ -8,9 +8,15 @@
 
 namespace florentino {
 
+// Execute STREAM on an OpenCL device. Boilerplate code to setup the OpenCL
+// context and doing data transfer is defined in this class. Subclasses must
+// define and launch the actual STREAM kernels.
 class OpenCLStream : public StreamBench,
                      public OpenCLAdapter {
 public:
+  // This class stores everything needed by each OpenCL device to execute the
+  // kernels. I had to do some MACRO programming, but it looks this was the only
+  // way to keep code clean.
   class Environment {
   public:
     #define BUFFER(N)                               \
@@ -121,6 +127,7 @@ protected:
   std::vector<Environment> _envs;
 };
 
+// STREAM benchmark for OpenCL-enabled GPUs.
 class OpenCLGPUStream : public OpenCLStream {
 public:
   OpenCLGPUStream(StreamBenchmarkRunner &runner)
